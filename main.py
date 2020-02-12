@@ -19,6 +19,7 @@ def upload_file():
 		resp.status_code = 400
 		return resp
 	file = request.files['file']
+    # blob = len(file.read())
 	if file.filename == '':
 		resp = jsonify({'message' : 'No file selected for uploading'})
 		resp.status_code = 400
@@ -26,7 +27,7 @@ def upload_file():
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		resp = jsonify({'message' : 'File successfully uploaded', 'id':  uuid.uuid4(), 'upload_date': str(date.today()), 'file_name': filename, 'url': str(os.path.abspath(filename))})
+		resp = jsonify({'message': 'File successfully uploaded', 'file_size': os.stat(filename).st_size, 'id':  uuid.uuid4(), 'upload_date': str(date.today()), 'file_name': filename, 'url': str(os.path.abspath(filename))})
 		resp.status_code = 201
 		return resp
 	else:
