@@ -1,6 +1,7 @@
 import os
 import urllib.request
 import uuid
+import hashlib
 from app import app
 from flask import Flask, request, redirect, jsonify
 from werkzeug.utils import secure_filename
@@ -26,7 +27,7 @@ def upload_file():
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		resp = jsonify({'message': 'File successfully uploaded', 'file_size': os.stat(filename).st_size, 'id':  uuid.uuid4(), 'upload_date': str(date.today()), 'file_name': filename, 'url': str(os.path.abspath(filename))})
+		resp = jsonify({'message': 'File successfully uploaded', 'hash_digest': hashlib.md5(file.stream.read()).hexdigest(), 'strean': str(type(file)), 'file_size': os.stat(filename).st_size, 'id':  uuid.uuid4(), 'upload_date': str(date.today()), 'file_name': filename, 'url': str(os.path.abspath(filename))})
 		resp.status_code = 201
 		return resp
 	else:
