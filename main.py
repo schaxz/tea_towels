@@ -4,6 +4,7 @@ import uuid
 from app import app
 from flask import Flask, request, redirect, jsonify
 from werkzeug.utils import secure_filename
+from datetime import date
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -25,7 +26,7 @@ def upload_file():
 	if file and allowed_file(file.filename):
 		filename = secure_filename(file.filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		resp = jsonify({'message' : 'File successfully uploaded', 'id':  uuid.uuid4(), 'file_name': filename, 'url': str(os.path.abspath(filename))})
+		resp = jsonify({'message' : 'File successfully uploaded', 'id':  uuid.uuid4(), 'upload_date': str(date.today()), 'file_name': filename, 'url': str(os.path.abspath(filename))})
 		resp.status_code = 201
 		return resp
 	else:
